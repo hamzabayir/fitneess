@@ -150,7 +150,6 @@
     <button class="action">Gönder</button>
   </div>
 </section>
-
 <script>
   function showSection(id) {
     document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
@@ -171,16 +170,49 @@
       "Günlük Kalori İhtiyacın: " + Math.round(bmr) + " kcal";
   }
 
+  // 🔥 LOCAL STORAGE EGZERSİZ SİSTEMİ
+
+  let workouts = JSON.parse(localStorage.getItem("workouts")) || [];
+
+  function saveWorkouts() {
+    localStorage.setItem("workouts", JSON.stringify(workouts));
+  }
+
+  function renderWorkouts() {
+    const list = document.getElementById("workoutList");
+    list.innerHTML = "";
+    workouts.forEach((w, index) => {
+      list.innerHTML += `
+        <tr>
+          <td>${w.day}</td>
+          <td>${w.exercise}</td>
+          <td><button onclick="deleteWorkout(${index})">X</button></td>
+        </tr>
+      `;
+    });
+  }
+
   function addWorkout() {
     const day = document.getElementById("day").value;
-    const ex = document.getElementById("exercise").value;
-    const row = `<tr>
-      <td>${day}</td>
-      <td>${ex}</td>
-      <td><button onclick="this.parentElement.parentElement.remove()">X</button></td>
-    </tr>`;
-    document.getElementById("workoutList").innerHTML += row;
+    const exercise = document.getElementById("exercise").value;
+
+    if (!day || !exercise) return;
+
+    workouts.push({ day, exercise });
+    saveWorkouts();
+    renderWorkouts();
+
+    document.getElementById("day").value = "";
+    document.getElementById("exercise").value = "";
   }
+
+  function deleteWorkout(index) {
+    workouts.splice(index, 1);
+    saveWorkouts();
+    renderWorkouts();
+  }
+
+  renderWorkouts();
 </script>
 
 </body>
