@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>FITNEESS | Profesyonel Fitness Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+      color: white;
+    }
+    header {
+      text-align: center;
+      padding: 30px;
+      background: rgba(0,0,0,0.4);
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      background: rgba(0,0,0,0.6);
+      padding: 15px;
+    }
+    nav button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 20px;
+      background: #00c6ff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    section {
+      display: none;
+      padding: 40px;
+    }
+    section.active {
+      display: block;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.1);
+      padding: 25px;
+      border-radius: 20px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    button.action {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 15px;
+      border: none;
+      background: #00ff99;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>FITNEESS</h1>
+  <p>Profesyonel Fitness ve Sağlıklı Yaşam Platformu</p>
+</header>
+
+<nav>
+  <button onclick="showSection('home')">Anasayfa</button>
+  <button onclick="showSection('calorie')">Kalori Ölçer</button>
+  <button onclick="showSection('workout')">Egzersiz</button>
+  <button onclick="showSection('about')">Hakkımda</button>
+  <button onclick="showSection('contact')">İletişim</button>
+</nav>
+
+<section id="home" class="active">
+  <h2>Anasayfa</h2>
+  <div class="cards">
+    <div class="card">📊 Gerçek Kalori Hesabı</div>
+    <div class="card">🏋️ Haftalık Egzersiz Takibi</div>
+    <div class="card">📈 Gelişim Odaklı Sistem</div>
+    <div class="card">💼 Profesyonel Dashboard</div>
+  </div>
+</section>
+
+<section id="calorie">
+  <h2>Kalori Hesaplama</h2>
+  <div class="card">
+    <input id="kg" type="number" placeholder="Kilo (kg)">
+    <input id="cm" type="number" placeholder="Boy (cm)">
+    <input id="age" type="number" placeholder="Yaş">
+    <select id="gender">
+      <option value="male">Erkek</option>
+      <option value="female">Kadın</option>
+    </select>
+    <button class="action" onclick="calcCalorie()">Hesapla</button>
+    <p id="result"></p>
+  </div>
+</section>
+
+<section id="workout">
+  <h2>Egzersiz Takibi</h2>
+  <div class="card">
+    <input id="day" placeholder="Gün">
+    <input id="exercise" placeholder="Egzersiz">
+    <button class="action" onclick="addWorkout()">Ekle</button>
+    <table>
+      <thead>
+        <tr><th>Gün</th><th>Egzersiz</th><th>Sil</th></tr>
+      </thead>
+      <tbody id="workoutList"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="about">
+  <h2>Hakkımda</h2>
+  <div class="card">
+    <p>
+      FITNEESS, spor ve sağlıklı yaşamı herkes için erişilebilir kılmak amacıyla
+      geliştirilmiş modern bir fitness platformudur.
+    </p>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>İletişim</h2>
+  <div class="card">
+    <input placeholder="Ad Soyad">
+    <input placeholder="E-posta">
+    <textarea placeholder="Mesaj"></textarea>
+    <button class="action">Gönder</button>
+  </div>
+</section>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+
+  function calcCalorie() {
+    const kg = document.getElementById("kg").value;
+    const cm = document.getElementById("cm").value;
+    const age = document.getElementById("age").value;
+    const gender = document.getElementById("gender").value;
+    let bmr;
+    if (gender === "male")
+      bmr = 88.36 + (13.4 * kg) + (4.8 * cm) - (5.7 * age);
+    else
+      bmr = 447.6 + (9.2 * kg) + (3.1 * cm) - (4.3 * age);
+    document.getElementById("result").innerText =
+      "Günlük Kalori İhtiyacın: " + Math.round(bmr) + " kcal";
+  }
+
+  function addWorkout() {
+    const day = document.getElementById("day").value;
+    const ex = document.getElementById("exercise").value;
+    const row = `<tr>
+      <td>${day}</td>
+      <td>${ex}</td>
+      <td><button onclick="this.parentElement.parentElement.remove()">X</button></td>
+    </tr>`;
+    document.getElementById("workoutList").innerHTML += row;
+  }
+</script>
+
+</body>
+</html>
